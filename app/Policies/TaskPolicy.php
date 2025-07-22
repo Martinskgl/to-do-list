@@ -13,7 +13,7 @@ class TaskPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->role->slug === 'administrador';
+        return $user->role->slug === 'admin';
     }
 
     /**
@@ -21,7 +21,7 @@ class TaskPolicy
      */
     public function view(User $user, Task $task): bool
     {
-        return ($user->role->slug === 'usuario' && $user->id === $task->user_id) 
+        return ($user->role->slug === 'user' && $user->id === $task->user_id) 
             || $user->role->slug === 'admin';
     }
 
@@ -30,7 +30,7 @@ class TaskPolicy
      */
     public function create(User $user): bool
     {
-        return $user->role->slug === 'administrador';
+        return $user->role->slug === 'admin' || $user->role->slug === 'user';
     }
 
     /**
@@ -38,7 +38,8 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): bool
     {
-        return $user->role->slug === 'administrador';
+        return ($user->role->slug === 'user' && $user->id === $task->user_id) 
+            || $user->role->slug === 'admin';
     }
 
     /**
@@ -46,7 +47,8 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task): bool
     {
-        return $user->role->slug === 'administrador';
+        return ($user->role->slug === 'user' && $user->id === $task->user_id) 
+            || $user->role->slug === 'admin';
     }
 
     /**

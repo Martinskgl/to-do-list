@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Services\TaskService;
 use App\Models\Task;
-use App\Http\Requests\Task\StoreTaskRequest;
-use App\Http\Requests\Task\UpdateTaskRequest;
+use App\Http\Requests\Task\StoreRequest;
+use App\Http\Requests\Task\UpdateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
@@ -36,7 +36,7 @@ class TaskController extends Controller
         return response()->json($task);
     }
 
-    public function store(StoreTaskRequest $request): JsonResponse
+    public function store(StoreRequest $request): JsonResponse
     {
         $this->authorize('create', Task::class);
         
@@ -45,7 +45,7 @@ class TaskController extends Controller
         return response()->json($task, 201);
     }
 
-    public function update(UpdateTaskRequest $request, Task $task): JsonResponse
+    public function update(UpdateRequest $request, Task $task): JsonResponse
     {
         $this->authorize('update', $task);
         

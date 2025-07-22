@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TaskController;
+use App\Http\Controllers\Api\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,12 +16,16 @@ use App\Http\Controllers\Api\TaskController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Rotas públicas (sem autenticação)
+Route::post('/login', [AuthController::class, 'login']);
 
-// API Routes for Tasks
+// Rotas protegidas (requerem autenticação)
 Route::middleware('auth:sanctum')->group(function () {
+    // Rotas de autenticação
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/me', [AuthController::class, 'me']);
+    
+    // Rotas das tasks
     Route::apiResource('tasks', TaskController::class);
     Route::patch('tasks/{task}/status', [TaskController::class, 'updateStatus']);
 });

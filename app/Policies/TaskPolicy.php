@@ -13,7 +13,7 @@ class TaskPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->role->slug === 'usuario';
+        return $user->role->slug === 'administrador';
     }
 
     /**
@@ -21,7 +21,8 @@ class TaskPolicy
      */
     public function view(User $user, Task $task): bool
     {
-        return $user->role->slug === 'usuario';
+        return ($user->role->slug === 'usuario' && $user->id === $task->user_id) 
+            || $user->role->slug === 'admin';
     }
 
     /**

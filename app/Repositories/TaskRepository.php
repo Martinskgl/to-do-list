@@ -4,12 +4,18 @@ namespace App\Repositories;
 
 use App\Models\Task;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class TaskRepository
 {
     public function all(): Collection
     {
         return Task::all();
+    }
+
+    public function paginate(int $perPage = 15): LengthAwarePaginator
+    {
+        return Task::paginate($perPage);
     }
 
     public function find(int $id): ?Task

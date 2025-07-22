@@ -13,7 +13,7 @@ class TaskPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->role->slug === 'usuario';
     }
 
     /**
@@ -21,7 +21,7 @@ class TaskPolicy
      */
     public function view(User $user, Task $task): bool
     {
-        return false;
+        return $user->role->slug === 'usuario';
     }
 
     /**
@@ -29,7 +29,7 @@ class TaskPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->role->slug === 'administrador';
     }
 
     /**
@@ -37,7 +37,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): bool
     {
-        return false;
+        return $user->role->slug === 'administrador';
     }
 
     /**
@@ -45,7 +45,7 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task): bool
     {
-        return false;
+        return $user->role->slug === 'administrador';
     }
 
     /**

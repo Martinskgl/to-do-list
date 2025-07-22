@@ -10,9 +10,6 @@
         >
           + Criar Task
         </button>
-        <button @click="logout" class="btn btn-outline-danger">
-          Logout
-        </button>
       </div>
     </div>
     <div class="row mb-4">

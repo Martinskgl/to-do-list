@@ -12,19 +12,18 @@
         </button>
     </div>
     </nav>
-
-    <TaskList @logout="logout" />
+    <UserList/>
   </div>
 </template>
 
 <script>
-import TaskList from './components/tasks/TaskList.vue'
 import AuthService from '../Auth/AuthService'
+import UserList from './components/users/UserList.vue'
 
 export default {
   name: 'TasksView',
   components: {
-    TaskList
+    UserList
   },
   methods: {
     async logout() {
@@ -50,3 +49,5 @@ export default {
   min-height: 100vh;
 }
 </style>
+
+

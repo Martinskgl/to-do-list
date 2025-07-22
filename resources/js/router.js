@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from './pages/LoginView.vue'
 import TasksView from './pages/TasksView.vue'
+import UserView from './pages/UserView.vue'
 import AuthService from './Auth/AuthService'
 import CreateTaskView from './pages/admin/CreateTaskView.vue'
 
@@ -29,7 +30,16 @@ const routes = [
         requiresAuth: true,
         requiresAdmin: true
     }
-  }
+  },
+    {
+    path: '/admin/users',
+    name: 'AdminUsersList',
+    component: UserView,
+    meta: {
+        requiresAuth: true,
+        requiresAdmin: true
+    }
+  },
 ]
 
 const router = createRouter({

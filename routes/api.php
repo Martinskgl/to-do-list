@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\TaskController;
+use App\Http\Controllers\Api\{TaskController, UserController};
 use App\Http\Controllers\Api\AuthController;
 
 /*
@@ -27,5 +27,8 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // Rotas das tasks
     Route::apiResource('tasks', TaskController::class);
+
+    Route::apiResource('users', UserController::class);
+    
     Route::patch('tasks/{task}/status', [TaskController::class, 'updateStatus']);
 });

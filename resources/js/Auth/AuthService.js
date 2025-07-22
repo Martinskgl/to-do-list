@@ -13,11 +13,24 @@ class AuthService {
                 email, password
             })
             
-            const { token } = response.data
+            const { token, user } = response.data
             this.setToken(token)
+            this.setUser(user);
             
             return { success: true }
         } catch (error) {
+            console.error('Erro de login:', error.response?.data)
+            
+            if (error.response?.status === 422) {
+                const errors = error.response.data.errors
+                const firstError = Object.values(errors)[0]?.[0] || 'Dados inválidos'
+                return { 
+                    success: false, 
+                    message: firstError,
+                    errors: errors
+                }
+            }
+            
             return { 
                 success: false, 
                 message: error.response?.data?.message || 'Erro no login' 
@@ -49,6 +62,19 @@ class AuthService {
     clearAuth() {
         localStorage.removeItem('auth_token')
         delete axios.defaults.headers.common['Authorization']
+    }
+
+    setUser(user) {
+        localStorage.setItem('user', JSON.stringify(user))
+    }
+
+    getUser() { 
+        return JSON.parse(localStorage.getItem('user'));
+    }
+
+    isAdmin() { 
+        const user = this.getUser();
+        return user.role?.slug === 'admin';
     }
 
     setupAxiosInterceptor() {

@@ -56,4 +56,9 @@ class UserService
     {
         return $this->userRepository->delete($id);
     }
+
+    public function searchByName(string $name): Collection
+    {
+        return $this->userRepository->searchByName($name);
+    }
 }

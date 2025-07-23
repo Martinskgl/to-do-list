@@ -24,16 +24,20 @@
         <div class="col-md-12">
           <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-              <h2>Criar Nova Task</h2>
+              <h2>Editar Usuário</h2>
               <p class="text-muted mb-0">
-                Use este formulário para criar uma nova task
-                <h6>teste </h6>
+                Altere os dados do usuário abaixo
               </p>
             </div>
           </div>
 
-          <TaskCreate 
-            @task-created="onTaskCreated"
+          <div v-if="error" class="alert alert-danger">
+            {{ error }}
+          </div>
+          <UserEdit
+            v-if="user && !error"
+            :user="user"
+            @user-updated="onUserUpdated"
             @cancel="goBack"
           />
         </div>
@@ -43,13 +47,21 @@
 </template>
 
 <script>
-import TaskCreate from '../components/tasks/store/TaskCreate.vue'
 import AuthService from '../../Auth/AuthService'
+import UserEdit from '../components/users/update/UserEdit.vue'
+import axios from 'axios'
 
 export default {
-  name: 'CreateTaskView',
+  name: 'EditUserView',
   components: {
-    TaskCreate
+    UserEdit
+  },
+  data() {
+    return {
+      user: null,
+      loading: true,
+      error: ''
+    }
   },
   methods: {
     async logout() {
@@ -61,10 +73,28 @@ export default {
       this.$router.go(-1)
     },
 
-    onTaskCreated(task) {
-      localStorage.setItem('taskCreatedMessage', `Task "${task.title}" criada com sucesso!`)
+    async fetchUser() {
+      this.loading = true
+      this.error = ''
+      try {
+        const id = this.$route.params.id
+        const response = await axios.get(`/api/users/${id}`)
+        this.user = response.data.data || response.data
+      } catch (e) {
+        if (e.response && e.response.status === 404) {
+          this.error = 'Usuário não encontrado.'
+        } else {
+          this.error = 'Erro ao carregar usuário.'
+        }
+      } finally {
+        this.loading = false
+      }
+    },
+
+    onUserUpdated(user) {
+      localStorage.setItem('userUpdatedMessage', `Usuário "${user.name}" editado com sucesso!`)
       this.$nextTick(() => {
-        this.$router.push('/tasks')
+        this.$router.push('/admin/users')
       })
     }
   },
@@ -80,7 +110,9 @@ export default {
       return
     }
 
-    next()
+    next(vm => {
+      vm.fetchUser()
+    })
   }
 }
 </script>

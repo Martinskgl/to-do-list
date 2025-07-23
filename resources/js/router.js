@@ -4,7 +4,9 @@ import TasksView from './pages/TasksView.vue'
 import UserView from './pages/UserView.vue'
 import AuthService from './Auth/AuthService'
 import CreateTaskView from './pages/admin/CreateTaskView.vue'
-
+import CreateUserView from './pages/admin/CreateUserView.vue'
+import EditTaskView from './pages/admin/EditTaskView.vue'
+import EditUserView from './pages/admin/EditUserView.vue'
 const routes = [
   {
     path: '/',
@@ -26,6 +28,33 @@ const routes = [
     path: '/admin/tasks/create',
     name: 'AdminCreateTask',
     component: CreateTaskView,
+    meta: { 
+        requiresAuth: true,
+        requiresAdmin: true
+    }
+  },
+    {
+    path: '/admin/tasks/edit/:id',
+    name: 'AdminEditTask',
+    component: EditTaskView,
+    meta: { 
+        requiresAuth: true,
+        requiresAdmin: true
+    }
+  },
+      {
+    path: '/admin/users/edit/:id',
+    name: 'AdminEditUser',
+    component: EditUserView,
+    meta: { 
+        requiresAuth: true,
+        requiresAdmin: true
+    }
+  },
+    {
+    path: '/admin/users/create',
+    name: 'AdminCreateUser',
+    component: CreateUserView,
     meta: { 
         requiresAuth: true,
         requiresAdmin: true

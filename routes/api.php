@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\{TaskController, UserController};
+use App\Http\Controllers\Api\{TaskController, UserController, RoleController};
 use App\Http\Controllers\Api\AuthController;
 
 /*
@@ -25,10 +25,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
     
-    // Rotas das tasks
+    Route::get('tasks/user', [TaskController::class, 'getByUser']);
     Route::apiResource('tasks', TaskController::class);
+   
+    Route::patch('tasks/{task}/status', [TaskController::class, 'updateStatus']);
 
     Route::apiResource('users', UserController::class);
-    
-    Route::patch('tasks/{task}/status', [TaskController::class, 'updateStatus']);
+
+    Route::apiResource('roles', RoleController::class);
 });

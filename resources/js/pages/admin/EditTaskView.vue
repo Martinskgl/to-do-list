@@ -24,16 +24,20 @@
         <div class="col-md-12">
           <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-              <h2>Criar Nova Task</h2>
+              <h2>Editar Task</h2>
               <p class="text-muted mb-0">
-                Use este formulário para criar uma nova task
-                <h6>teste </h6>
+                Altere os dados da task abaixo
               </p>
             </div>
           </div>
 
-          <TaskCreate 
-            @task-created="onTaskCreated"
+          <div v-if="error" class="alert alert-danger">
+            {{ error }}
+          </div>
+          <TaskEdit
+            v-if="task && !error"
+            :task="task"
+            @task-updated="onTaskUpdated"
             @cancel="goBack"
           />
         </div>
@@ -43,13 +47,21 @@
 </template>
 
 <script>
-import TaskCreate from '../components/tasks/store/TaskCreate.vue'
 import AuthService from '../../Auth/AuthService'
+import TaskEdit from '../components/tasks/update/TaskEdit.vue'
+import axios from 'axios'
 
 export default {
-  name: 'CreateTaskView',
+  name: 'EditTaskView',
   components: {
-    TaskCreate
+    TaskEdit
+  },
+  data() {
+    return {
+      task: null,
+      loading: true,
+      error: ''
+    }
   },
   methods: {
     async logout() {
@@ -61,8 +73,26 @@ export default {
       this.$router.go(-1)
     },
 
-    onTaskCreated(task) {
-      localStorage.setItem('taskCreatedMessage', `Task "${task.title}" criada com sucesso!`)
+    async fetchTask() {
+      this.loading = true
+      this.error = ''
+      try {
+        const id = this.$route.params.id
+        const response = await axios.get(`/api/tasks/${id}`)
+        this.task = response.data.data || response.data
+      } catch (e) {
+        if (e.response && e.response.status === 404) {
+          this.error = 'Task não encontrada.'
+        } else {
+          this.error = 'Erro ao carregar task.'
+        }
+      } finally {
+        this.loading = false
+      }
+    },
+
+    onTaskUpdated(task) {
+      localStorage.setItem('taskCreatedMessage', `Task "${task.title}" editada com sucesso!`)
       this.$nextTick(() => {
         this.$router.push('/tasks')
       })
@@ -80,7 +110,9 @@ export default {
       return
     }
 
-    next()
+    next(vm => {
+      vm.fetchTask()
+    })
   }
 }
 </script>

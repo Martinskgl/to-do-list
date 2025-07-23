@@ -1,11 +1,11 @@
 <template>
-    <div class="task-create">
+    <div class="task-edit">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">📝 Criar</h5>
+                <h5 class="mb-0">✏️ Editar</h5>
             </div>
             <div class="card-body">
-                <form @submit.prevent="createTask">
+                <form @submit.prevent="updateTask">
                     <div class="mb-3">
                         <label for="title" class="form-label">Título *</label>
                         <input
@@ -95,7 +95,7 @@
                                 v-if="loading"
                                 class="spinner-border spinner-border-sm me-2"
                             ></span>
-                            {{ loading ? "Criando..." : "Criar Task" }}
+                            {{ loading ? "Salvando..." : "Salvar Alterações" }}
                         </button>
                         <button
                             type="button"
@@ -124,7 +124,13 @@
 import axios from "axios";
 
 export default {
-    name: "TaskCreate",
+    name: "TaskEdit",
+    props: {
+        task: {
+            type: Object,
+            required: true
+        }
+    },
     emits: ["task-created", "cancel"],
     data() {
         return {
@@ -154,19 +160,26 @@ export default {
             return `${year}-${month}-${day}T${hours}:${minutes}`;
         },
     },
-    async mounted() {
+    mounted() {
+        // Preencher formulário com dados da task recebida
+        this.form = {
+            title: this.task.title || '',
+            describe: this.task.describe || '',
+            status: this.task.status || 'pending',
+            expiration_date: this.task.expiration_date ? this.task.expiration_date.substring(0, 16) : '',
+            user_id: this.task.user_id || ''
+        };
         // Buscar todos os usuários ao montar
-        try {
-            const response = await axios.get('/api/users');
+        axios.get('/api/users').then(response => {
             this.users = Array.isArray(response.data)
                 ? response.data.filter(u => u && u.id && u.name)
                 : [];
-        } catch (e) {
+        }).catch(() => {
             this.users = [];
-        }
+        });
     },
     methods: {
-        async createTask() {
+        async updateTask() {
             this.loading = true;
             this.errors = {};
             this.successMessage = "";
@@ -187,18 +200,17 @@ export default {
                     }
                 });
 
-                const response = await axios.post("/api/tasks", taskData);
+                const response = await axios.put(`/api/tasks/${this.task.id}`, taskData);
 
-                this.successMessage = "Task criada com sucesso!";
+                this.successMessage = "Task atualizada com sucesso!";
 
-                this.$emit("task-created", response.data.data || response.data);
+                this.$emit("task-updated", response.data.data || response.data);
 
                 setTimeout(() => {
-                    this.resetForm();
                     this.$emit("cancel");
                 }, 2000);
             } catch (error) {
-                console.error("Erro ao criar task:", error);
+                console.error("Erro ao atualizar task:", error);
 
                 if (error.response?.status === 422) {
                     this.errors = error.response.data.errors || {};
@@ -206,7 +218,7 @@ export default {
                         "Por favor, corrija os erros no formulário";
                 } else {
                     this.errorMessage =
-                        error.response?.data?.message || "Erro ao criar task";
+                        error.response?.data?.message || "Erro ao atualizar task";
                 }
             } finally {
                 this.loading = false;
@@ -215,10 +227,11 @@ export default {
 
         resetForm() {
             this.form = {
-                title: "",
-                describe: "",
-                status: "pending",
-                expiration_date: "",
+                title: this.task.title || '',
+                describe: this.task.describe || '',
+                status: this.task.status || 'pending',
+                expiration_date: this.task.expiration_date ? this.task.expiration_date.substring(0, 16) : '',
+                user_id: this.task.user_id || ''
             };
             this.errors = {};
             this.successMessage = "";
@@ -229,9 +242,13 @@ export default {
 </script>
 
 <style scoped>
-.task-create {
+.task-edit {
     max-width: 600px;
     margin: 0 auto;
+}
+/* Ícone do botão editar */
+.fa-pencil-alt {
+  font-size: 1.1em;
 }
 
 .card {

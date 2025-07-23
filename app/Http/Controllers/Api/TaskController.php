@@ -40,7 +40,7 @@ class TaskController extends Controller
     {
         $this->authorize('create', Task::class);
         
-        $task = $this->service->create($request->validated(), $request->user()->id);
+        $task = $this->service->create($request->validated(), $request->user_id);
         
         return response()->json($task, 201);
     }
@@ -50,6 +50,7 @@ class TaskController extends Controller
         $this->authorize('update', $task);
         
         $this->service->update($task->id, $request->validated());
+        
         $updatedTask = $this->service->getById($task->id);
         
         return response()->json($updatedTask);
@@ -67,12 +68,21 @@ class TaskController extends Controller
     public function updateStatus(Request $request, Task $task): JsonResponse
     {
         $this->authorize('update', $task);
-        
-        $request->validate(['status' => 'required|string']);
+       
+        $request->validate(['status' => 'sometimes|string|in:pending,in_progress,completed,cancelled']);
         
         $this->service->update($task->id, ['status' => $request->status]);
         $updatedTask = $this->service->getById($task->id);
         
         return response()->json($updatedTask);
+    }
+
+    public function getByUser(): JsonResponse
+    {
+        $this->authorize('viewAny', Task::class);
+        
+        $tasks = $this->service->getUser(auth()->user()->id);
+
+        return response()->json($tasks);
     }
 }

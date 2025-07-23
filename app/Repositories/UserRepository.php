@@ -18,7 +18,10 @@ class UserRepository
     }
 
     public function update(int $id, array $data): bool
-    { 
+    {
+        if (isset($data['password']) && $data['password']) {
+            $data['password'] = bcrypt($data['password']);
+        }
         return User::where('id', $id)->update($data);
     }
 
@@ -42,8 +45,13 @@ class UserRepository
         return User::where('name', $name)->first();
     }
 
+    public function searchByName(string $name): Collection
+    {
+        return User::where('name', 'like', "%$name%")->with('role')->get();
+    }
+
     public function findById(int $id): ?User
     {
-        return User::find($id);
+        return User::with('role')->find($id);
     }
 }

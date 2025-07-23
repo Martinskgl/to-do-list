@@ -18,6 +18,7 @@ class StoreRequest extends FormRequest
             'describe' => 'nullable|string',
             'slug' => 'nullable|string|unique:tasks,slug',
             'expiration_date' => 'nullable|date|after:today',
+            'status' => 'sometimes|string|in:pending,in_progress,completed,cancelled'
         ];
     }
 

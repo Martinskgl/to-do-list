@@ -8,9 +8,13 @@ import './bootstrap';
 import { createApp } from 'vue';
 import App from './components/App.vue';
 import router from './router';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import VueSelect from 'vue-select';
+
 
 const app = createApp(App);
 
 app.use(router);
+app.component('v-select', VueSelect);
 
 app.mount('#app');

@@ -19,6 +19,7 @@ class UpdateRequest extends FormRequest
             'title' => 'sometimes|required|string|max:255',
             'describe' => 'nullable|string',
             'slug' => 'nullable|string|unique:tasks,slug,' . $taskId,
+            'user_id' => 'sometimes|exists:users,id',
             'expiration_date' => 'nullable|date|after:today',
             'status' => 'sometimes|string|in:pending,in_progress,completed,cancelled',
         ];

@@ -51,15 +51,30 @@
         <div v-for="task in filteredTasks" :key="task.id" class="col-md-6 mb-3">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">{{ task.title }}</h5>
+              <div class="d-flex align-items-center justify-content-between">
+                <h5 class="card-title mb-0">{{ task.title }}</h5>
+                <button
+                  v-if="isAdmin"
+                  class="btn btn-outline-primary btn-sm ms-2"
+                  title="Editar Task"
+                  @click="$router.push(`/admin/tasks/edit/${task.id}`)"
+                >
+                  <i class="fas fa-pencil-alt"></i>
+                </button>
+              </div>
               <p class="card-text">{{ task.describe }}</p>
+              <div class="mb-1 text-muted small">
+                <strong>Atribuído:</strong> {{ task.user?.name || task.user_name || 'N/A' }}
+              </div>
               
               <div class="mb-2">
-                <span class="badge" :class="getStatusClass(task.status)">
-                  {{ getStatusText(task.status) }}
-                </span>
+                <select v-model="task.status" @change="updateTaskStatus(task)" :class="'badge ' + getStatusClass(task.status) + ' form-select form-select-sm w-auto d-inline-block'">
+                  <option value="pending">Pendente</option>
+                  <option value="in_progress">Em Progresso</option>
+                  <option value="completed">Concluída</option>
+                  <option value="cancelled">Cancelada</option>
+                </select>
               </div>
-
               <div v-if="task.expiration_date" class="text-muted small">
                 Vence em: {{ formatDate(task.expiration_date) }}
               </div>
@@ -69,9 +84,9 @@
       </div>
     </div>
 
-    <!-- Toast Simples -->
-    <div v-if="showToast" class="alert alert-success alert-dismissible position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 9999;">
-      <strong>✅ {{ toastMessage }}</strong>
+    <div v-if="showToast" :class="'alert alert-dismissible position-fixed top-0 start-50 translate-middle-x mt-3 ' + (toastType === 'error' ? 'alert-danger' : 'alert-success')" style="z-index: 9999;">
+      <strong v-if="toastType === 'error'">❌ {{ toastMessage }}</strong>
+      <strong v-else>✅ {{ toastMessage }}</strong>
       <button type="button" class="btn-close" @click="hideToast"></button>
     </div>
   </div>
@@ -91,7 +106,8 @@ export default {
       searchQuery: '',
       statusFilter: '',
       showToast: false,
-      toastMessage: ''
+      toastMessage: '',
+      toastType: 'success'
     }
   },
   computed: {
@@ -124,12 +140,37 @@ export default {
       this.error = ''
 
       try {
-        const response = await axios.get('/api/tasks')
-        this.tasks = response.data.data
+        let response
+        if (this.isAdmin) {
+          response = await axios.get('/api/tasks')
+        } else {
+          response = await axios.get('api/tasks/user')
+        }
+        this.tasks = response.data.data || response.data
       } catch (error) {
+        console.log(error);
         this.error = 'Erro ao carregar tasks'
       } finally {
         this.loading = false
+      }
+    },
+
+    async updateTaskStatus(task) {
+      try {
+        const response = await axios.patch(`/api/tasks/${task.id}/status`, { status: task.status })
+        this.toastMessage = 'Status atualizado com sucesso!'
+        this.toastType = 'success'
+        this.showToast = true
+        setTimeout(() => this.hideToast(), 2000)
+      } catch (error) {
+        if (error.response && error.response.data && error.response.data.message) {
+          this.toastMessage = error.response.data.message
+          this.toastType = 'error'
+          this.showToast = true
+          setTimeout(() => this.hideToast(), 3000)
+        } else {
+          this.error = 'Erro ao atualizar status da task'
+        }
       }
     },
 

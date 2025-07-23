@@ -32,8 +32,8 @@
             </div>
           </div>
 
-          <TaskCreate 
-            @task-created="onTaskCreated"
+          <UserCreate
+            @user-created="onUserCreated"
             @cancel="goBack"
           />
         </div>
@@ -43,13 +43,13 @@
 </template>
 
 <script>
-import TaskCreate from '../components/tasks/store/TaskCreate.vue'
 import AuthService from '../../Auth/AuthService'
+import UserCreate from '../components/users/store/UserCreate.vue'
 
 export default {
   name: 'CreateTaskView',
   components: {
-    TaskCreate
+    UserCreate
   },
   methods: {
     async logout() {

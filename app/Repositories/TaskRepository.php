@@ -10,12 +10,12 @@ class TaskRepository
 {
     public function all(): Collection
     {
-        return Task::all();
+        return Task::with('user')->get();
     }
 
     public function paginate(int $perPage = 15): LengthAwarePaginator
     {
-        return Task::paginate($perPage);
+        return Task::with('user')->paginate($perPage);
     }
 
     public function find(int $id): ?Task
@@ -48,11 +48,11 @@ class TaskRepository
 
     public function findByUser(int $userId): Collection
     {
-        return Task::where('user_id', $userId)->get();
+        return Task::where('user_id', $userId)->with('user')->get();
     }
 
     public function findByStatus(string $status): Collection
     {
-        return Task::where('status', $status)->get();
+        return Task::where('status', $status)->with('user')->get();
     }
 }

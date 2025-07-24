@@ -39,11 +39,7 @@
               </div>
 
               <div class="mb-3">
-                <button
-                  type="submit"
-                  class="btn btn-primary w-100"
-                  :disabled="loading"
-                >
+                <button type="submit" class="btn btn-primary w-100" :disabled="loading">
                   <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
                   {{ loading ? 'Entrando...' : 'Entrar' }}
                 </button>
@@ -65,88 +61,88 @@
 </template>
 
 <script>
-import AuthService from './AuthService';
+  import AuthService from './AuthService';
 
-export default {
-  name: 'LoginForm',
-  data() {
-    return {
-      form: {
-        email: '',
-        password: ''
-      },
-      errors: {},
-      loading: false,
-      errorMessage: '',
-      successMessage: ''
-    };
-  },
-  methods: {
-    async handleLogin() {
-      this.clearMessages();
-      this.loading = true;
+  export default {
+    name: 'LoginForm',
+    data() {
+      return {
+        form: {
+          email: '',
+          password: '',
+        },
+        errors: {},
+        loading: false,
+        errorMessage: '',
+        successMessage: '',
+      };
+    },
+    methods: {
+      async handleLogin() {
+        this.clearMessages();
+        this.loading = true;
 
-      try {
-        const result = await AuthService.login(this.form.email, this.form.password);
-        
-        if (result.success) {
-          this.successMessage = 'Login realizado com sucesso!';
-          
-          setTimeout(() => {
-            this.$emit('login-success');
-          }, 1000);
-        } else {
-          this.errorMessage = result.message;
+        try {
+          const result = await AuthService.login(this.form.email, this.form.password);
 
-          if (result.errors) {
-            this.errors = result.errors;
+          if (result.success) {
+            this.successMessage = 'Login realizado com sucesso!';
+
+            setTimeout(() => {
+              this.$emit('login-success');
+            }, 1000);
+          } else {
+            this.errorMessage = result.message;
+
+            if (result.errors) {
+              this.errors = result.errors;
+            }
           }
+        } catch (error) {
+          console.error('Erro no login:', error);
+          this.errorMessage = 'Erro inesperado. Tente novamente.';
+        } finally {
+          this.loading = false;
         }
-      } catch (error) {
-        console.error('Erro no login:', error);
-        this.errorMessage = 'Erro inesperado. Tente novamente.';
-      } finally {
-        this.loading = false;
+      },
+
+      clearMessages() {
+        this.errors = {};
+        this.errorMessage = '';
+        this.successMessage = '';
+      },
+    },
+    mounted() {
+      if (AuthService.isAuthenticated()) {
+        this.$emit('login-success');
       }
     },
-
-    clearMessages() {
-      this.errors = {};
-      this.errorMessage = '';
-      this.successMessage = '';
-    }
-  },
-  mounted() {
-    if (AuthService.isAuthenticated()) {
-      this.$emit('login-success');
-    }
-  }
-};
+  };
 </script>
 
 <style scoped>
-.card {
-  border: none;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+  .card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
 
-.card-header {
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #dee2e6;
-}
+  .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+  }
 
-.btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
-}
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
 
-.btn-primary:hover {
-  background-color: #0056b3;
-  border-color: #0056b3;
-}
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+  }
 
-.spinner-border-sm {
-  width: 1rem;
-  height: 1rem;
-}
+  .spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+  }
 </style>

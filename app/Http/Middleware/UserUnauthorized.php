@@ -17,7 +17,7 @@ class UserUnauthorized
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::user()->role->slug !== 'admin') {
-            return redirect()->back();
+            return redirect()->route('login');
         }
 
         return $next($request);

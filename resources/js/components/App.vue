@@ -5,19 +5,19 @@
 </template>
 
 <script>
-export default {
-  name: 'App'
-};
+  export default {
+    name: 'App',
+  };
 </script>
 
 <style>
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  background-color: #f8f9fa;
-}
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+  }
 
-#app {
-  min-height: 100vh;
-}
+  #app {
+    min-height: 100vh;
+  }
 </style>

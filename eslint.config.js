@@ -1,4 +1,5 @@
 import vue from 'eslint-plugin-vue';
+import prettier from 'eslint-plugin-prettier';
 import vueParser from 'vue-eslint-parser';
 
 export default [
@@ -11,6 +12,7 @@ export default [
     },
     plugins: {
       vue,
+      prettier,
     },
     rules: {
       'semi': ['error', 'always'],

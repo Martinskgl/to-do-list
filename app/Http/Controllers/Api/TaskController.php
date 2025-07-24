@@ -3,85 +3,87 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Services\TaskService;
-use App\Models\Task;
 use App\Http\Requests\Task\StoreRequest;
 use App\Http\Requests\Task\UpdateRequest;
-use Illuminate\Http\Request;
+use App\Models\Task;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class TaskController extends Controller
 {
-    protected TaskService $service;
-
-    public function __construct(TaskService $service)
+    public function index(): JsonResponse
     {
-        $this->service = $service;
-    }
-
-    public function index(Request $request): JsonResponse
-    {
-        $this->authorize('viewAny', Task::class);
-        
-        $perPage = $request->get('per_page', 15);
-        $tasks = $this->service->getAll($perPage);
-        
+        $tasks = Task::with('user')->paginate(15);
         return response()->json($tasks);
     }
 
     public function show(Task $task): JsonResponse
     {
-        $this->authorize('view', $task);
-        
+        $task->load('user');
+
         return response()->json($task);
     }
 
     public function store(StoreRequest $request): JsonResponse
     {
-        $this->authorize('create', Task::class);
-        
-        $task = $this->service->create($request->validated(), $request->user_id);
-        
+        $task = Task::create([
+            ...$request->validated(),
+            'slug' => Str::slug($request->input('title')),
+        ]);
+
         return response()->json($task, 201);
     }
 
     public function update(UpdateRequest $request, Task $task): JsonResponse
     {
-        $this->authorize('update', $task);
-        
-        $this->service->update($task->id, $request->validated());
-        
-        $updatedTask = $this->service->getById($task->id);
-        
-        return response()->json($updatedTask);
+
+        $data = $request->validated();
+
+        if (!$task) {
+            return response()->json(['message' => 'Task not found'], 404);
+        }
+        $data['expiration_date'] = date('Y-m-d H:i:s', strtotime($data['expiration_date']));
+
+        Task::where('id', $task->id)->update([
+            ...$data,
+            'slug' => Str::slug($data['title']),
+        ]);
+
+        $task->refresh()->load('user');
+
+        return response()->json($task);
     }
 
     public function destroy(Task $task): JsonResponse
     {
-        $this->authorize('delete', $task);
-        
-        $this->service->delete($task->id);
-        
+        if (!$task) {
+            return response()->json(['message' => 'Task not found'], 404);
+        }
+
+        $task->delete();
+
         return response()->json(null, 204);
     }
 
     public function updateStatus(Request $request, Task $task): JsonResponse
     {
-        $this->authorize('update', $task);
-       
         $request->validate(['status' => 'sometimes|string|in:pending,in_progress,completed,cancelled']);
-        
-        $this->service->update($task->id, ['status' => $request->status]);
-        $updatedTask = $this->service->getById($task->id);
-        
-        return response()->json($updatedTask);
+        if (!$task) {
+            return response()->json(['message' => 'Task not found'], 404);
+        }
+        $task->update(['status' => $request->status]);
+
+        return response()->json($task);
     }
 
     public function getByUser(): JsonResponse
     {
-        $this->authorize('viewAny', Task::class);
-        
-        $tasks = $this->service->getUser(auth()->user()->id);
+        $tasks = Task::where('user_id', auth()->user()->id)->with('user')->get();
+
+        if (!$tasks) {
+            return response()->json(['message' => 'No tasks found for this user'], 404);
+        }
 
         return response()->json($tasks);
     }

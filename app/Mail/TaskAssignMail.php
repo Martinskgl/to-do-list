@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -11,7 +10,8 @@ use Illuminate\Queue\SerializesModels;
 
 class TaskAssignMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
     public $task;
     public $user;
     /**
@@ -22,7 +22,6 @@ class TaskAssignMail extends Mailable
         $this->task = $task;
         $this->user = $user;
     }
-
 
     /**
      * Get the message envelope.

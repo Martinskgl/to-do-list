@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import LoginForm from '../Auth/LoginForm.vue'
+import LoginForm from '../Auth/LoginForm.vue';
 
 export default {
   name: 'LoginView',
@@ -14,10 +14,10 @@ export default {
   },
   methods: {
     handleLoginSuccess() {
-      this.$router.push('/tasks')
+      this.$router.push('/tasks');
     }
   }
-}
+};
 </script>
 
 <style scoped>

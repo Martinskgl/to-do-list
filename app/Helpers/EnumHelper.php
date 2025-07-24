@@ -1,6 +1,5 @@
 <?php
 
-
 if (!function_exists('enum_to_string')) {
     function enum_to_string($enum)
     {

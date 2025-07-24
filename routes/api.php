@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\{TaskController, UserController, RoleController};
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\{RoleController, TaskController, UserController};
+use App\Http\Middleware\UserUnauthorized;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,21 +16,22 @@ use App\Http\Controllers\Api\AuthController;
 |
 */
 
-// Rotas públicas (sem autenticação)
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-// Rotas protegidas (requerem autenticação)
 Route::middleware('auth:sanctum')->group(function () {
-    // Rotas de autenticação
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
-    
+
     Route::get('tasks/user', [TaskController::class, 'getByUser']);
-    Route::apiResource('tasks', TaskController::class);
-   
+
+    Route::middleware(UserUnauthorized::class)->group(function () {
+        Route::apiResource('users', UserController::class);
+        Route::apiResource('roles', RoleController::class);
+        Route::apiResource('tasks', TaskController::class)->except(['destroy']);
+    });
+
+    Route::delete('tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+    Route::get('tasks/{task}/status', [TaskController::class, 'getStatus']);
     Route::patch('tasks/{task}/status', [TaskController::class, 'updateStatus']);
 
-    Route::apiResource('users', UserController::class);
-
-    Route::apiResource('roles', RoleController::class);
 });

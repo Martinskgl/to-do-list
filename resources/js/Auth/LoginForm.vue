@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import AuthService from './AuthService'
+import AuthService from './AuthService';
 
 export default {
   name: 'LoginForm',
@@ -79,49 +79,49 @@ export default {
       loading: false,
       errorMessage: '',
       successMessage: ''
-    }
+    };
   },
   methods: {
     async handleLogin() {
-      this.clearMessages()
-      this.loading = true
+      this.clearMessages();
+      this.loading = true;
 
       try {
-        const result = await AuthService.login(this.form.email, this.form.password)
+        const result = await AuthService.login(this.form.email, this.form.password);
         
         if (result.success) {
-          this.successMessage = 'Login realizado com sucesso!'
+          this.successMessage = 'Login realizado com sucesso!';
           
           setTimeout(() => {
-            this.$emit('login-success')
-          }, 1000)
+            this.$emit('login-success');
+          }, 1000);
         } else {
-          this.errorMessage = result.message
+          this.errorMessage = result.message;
 
           if (result.errors) {
-            this.errors = result.errors
+            this.errors = result.errors;
           }
         }
       } catch (error) {
-        console.error('Erro no login:', error)
-        this.errorMessage = 'Erro inesperado. Tente novamente.'
+        console.error('Erro no login:', error);
+        this.errorMessage = 'Erro inesperado. Tente novamente.';
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
 
     clearMessages() {
-      this.errors = {}
-      this.errorMessage = ''
-      this.successMessage = ''
+      this.errors = {};
+      this.errorMessage = '';
+      this.successMessage = '';
     }
   },
   mounted() {
     if (AuthService.isAuthenticated()) {
-      this.$emit('login-success')
+      this.$emit('login-success');
     }
   }
-}
+};
 </script>
 
 <style scoped>

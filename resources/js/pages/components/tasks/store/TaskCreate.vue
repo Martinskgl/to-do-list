@@ -144,7 +144,6 @@ export default {
     },
     computed: {
         minDate() {
-            // Data mínima: agora
             const now = new Date();
             const year = now.getFullYear();
             const month = String(now.getMonth() + 1).padStart(2, "0");
@@ -155,7 +154,6 @@ export default {
         },
     },
     async mounted() {
-        // Buscar todos os usuários ao montar
         try {
             const response = await axios.get('/api/users');
             this.users = Array.isArray(response.data)

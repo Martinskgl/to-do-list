@@ -1,24 +1,6 @@
 <template>
   <div class="create-task-page">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-      <div class="container">
-        <span class="navbar-brand">📝 Todo App - Admin Panel</span>
-        <div class="d-flex gap-2">
-          <button 
-            @click="goBack" 
-            class="btn btn-outline-light btn-sm"
-          >
-            ← Voltar
-          </button>
-          <button 
-            @click="logout" 
-            class="btn btn-outline-light btn-sm"
-          >
-            Logout
-          </button>
-        </div>
-      </div>
-    </nav>
+    <Header />
     <div class="container mt-4">
       <div class="row">
         <div class="col-md-12">
@@ -43,46 +25,48 @@
 </template>
 
 <script>
-import TaskCreate from '../components/tasks/store/TaskCreate.vue'
-import AuthService from '../../Auth/AuthService'
+import TaskCreate from '../components/tasks/store/TaskCreate.vue';
+import AuthService from '../../Auth/AuthService';
+import Header from '../components/layout/header.vue';
 
 export default {
   name: 'CreateTaskView',
   components: {
-    TaskCreate
+    TaskCreate,
+    Header
   },
   methods: {
     async logout() {
-      await AuthService.logout()
-      this.$router.push('/login')
+      await AuthService.logout();
+      this.$router.push('/login');
     },
 
     goBack() {
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
 
     onTaskCreated(task) {
-      localStorage.setItem('taskCreatedMessage', `Task "${task.title}" criada com sucesso!`)
+      localStorage.setItem('taskCreatedMessage', `Task "${task.title}" criada com sucesso!`);
       this.$nextTick(() => {
-        this.$router.push('/tasks')
-      })
+        this.$router.push('/tasks');
+      });
     }
   },
 
   async beforeRouteEnter(to, from, next) {
     if (!AuthService.isAuthenticated()) {
-      next('/login')
-      return
+      next('/login');
+      return;
     }
 
     if (!AuthService.isAdmin()) {
-      next('/tasks')
-      return
+      next('/tasks');
+      return;
     }
 
-    next()
+    next();
   }
-}
+};
 </script>
 
 <style scoped>

@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use App\Enums\TaskStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Enums\TaskStatus;
 
 class Task extends Model
 {
@@ -23,7 +23,7 @@ class Task extends Model
     protected function casts(): array
     {
         return [
-            'status' => TaskStatus::class,
+            'status'          => TaskStatus::class,
             'expiration_date' => 'datetime',
         ];
     }

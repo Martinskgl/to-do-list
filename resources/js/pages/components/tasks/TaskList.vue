@@ -6,6 +6,9 @@
         <button v-if="isAdmin" @click="goToCreateTask" class="btn btn-success btn-sm">
           + Criar Task
         </button>
+        <button  @click="downloadTasksCsv" class="btn btn-outline-secondary btn-sm">
+          <i class="fas fa-download"></i> Download CSV
+        </button>
       </div>
     </div>
     <div class="row mb-4">
@@ -51,15 +54,15 @@
                 </h5>
                 <button
                   v-if="isAdmin"
-                  class="btn btn-outline-primary btn-sm ms-2"
+                  class="btn btn-outline-primary btn-sm"
                   title="Editar Task"
                   @click="$router.push(`/admin/tasks/edit/${task.id}`)"
                 >
                   <i class="fas fa-pencil-alt"></i>
                 </button>
                 <button
-                  class="btn btn-outline-primary btn-sm ms-2"
-                  title="Editar Task"
+                  class="btn btn-outline-danger btn-sm"
+                  title="Deletar Task"
                   @click="deleteTask(task.id)"
                 >
                   <i class="fas fa-trash-alt"></i>
@@ -78,7 +81,7 @@
                   :class="
                     'badge ' +
                     getStatusClass(task.status) +
-                    ' form-select form-select-sm w-auto d-inline-block'
+                    ' form-select form-select-sm w-25 d-inline-block'
                   "
                 >
                   <option value="pending">Pendente</option>
@@ -170,6 +173,25 @@
       },
     },
     methods: {
+      async downloadTasksCsv() {
+        try {
+          const response = await axios.get('/api/tasks/export', {
+            responseType: 'blob',
+          });
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', 'tasks.csv');
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+        } catch (error) {
+          this.toastMessage = 'Erro ao baixar CSV';
+          this.toastType = 'error';
+          this.showToast = true;
+          setTimeout(() => this.hideToast(), 3000);
+        }
+      },
       async loadTasks() {
         this.loading = true;
         this.error = '';

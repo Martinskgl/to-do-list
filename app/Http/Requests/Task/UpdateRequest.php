@@ -16,25 +16,25 @@ class UpdateRequest extends FormRequest
         $taskId = $this->route('task') ? $this->route('task')->id : null;
 
         return [
-            'title'           => 'sometimes|required|string|max:255',
-            'describe'        => 'nullable|string',
-            'slug'            => 'nullable|string|unique:tasks,slug,' . $taskId,
-            'user_id'         => 'sometimes|exists:users,id',
+            'title' => 'sometimes|required|string|max:255',
+            'describe' => 'nullable|string',
+            'slug' => 'nullable|string|unique:tasks,slug,'.$taskId,
+            'user_id' => 'sometimes|exists:users,id',
             'expiration_date' => 'nullable|date|after:today',
-            'status'          => 'sometimes|string|in:pending,in_progress,completed,cancelled',
+            'status' => 'sometimes|string|in:pending,in_progress,completed,cancelled',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'title.required'        => 'O título é obrigatório.',
-            'title.max'             => 'O título deve ter no máximo 255 caracteres.',
-            'describe.string'       => 'A descrição deve ser um texto válido.',
-            'slug.unique'           => 'Este slug já está sendo usado por outra tarefa.',
-            'expiration_date.date'  => 'A data de expiração deve ser uma data válida.',
+            'title.required' => 'O título é obrigatório.',
+            'title.max' => 'O título deve ter no máximo 255 caracteres.',
+            'describe.string' => 'A descrição deve ser um texto válido.',
+            'slug.unique' => 'Este slug já está sendo usado por outra tarefa.',
+            'expiration_date.date' => 'A data de expiração deve ser uma data válida.',
             'expiration_date.after' => 'A data de expiração deve ser posterior a hoje.',
-            'status.in'             => 'O status deve ser um dos seguintes: pending, in_progress, completed, cancelled.',
+            'status.in' => 'O status deve ser um dos seguintes: pending, in_progress, completed, cancelled.',
         ];
     }
 }

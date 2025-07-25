@@ -17,7 +17,7 @@ class UserUnauthorized
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::user()->role->slug !== 'admin') {
-            return redirect()->route('login');
+            return response()->json(['message' => 'Acesso não autorizado.'], 401);
         }
 
         return $next($request);

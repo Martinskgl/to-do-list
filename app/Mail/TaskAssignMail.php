@@ -12,8 +12,11 @@ class TaskAssignMail extends Mailable
 {
     use Queueable;
     use SerializesModels;
+
     public $task;
+
     public $user;
+
     /**
      * Create a new message instance.
      */

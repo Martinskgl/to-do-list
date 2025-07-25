@@ -1,61 +1,326 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📝 Todo App - Laravel + Vue.js
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Uma aplicação completa de gerenciamento de tarefas (To-Do List) desenvolvida com **Laravel 11** no backend e **Vue.js 3** no frontend, implementando autenticação JWT, sistema de roles e CRUD completo.
 
-## About Laravel
+## 🚀 Tecnologias Utilizadas
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Backend (Laravel)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Laravel 11** - Framework PHP
+- **Laravel Sanctum** - Autenticação API via tokens
+- **MySQL/SQLite** - Banco de dados
+- **Eloquent ORM** - Mapeamento objeto-relacional
+- **Laravel Mail** - Sistema de e-mails
+- **Form Requests** - Validação de dados
+- **Observers** - Eventos de modelo
+- **Factories & Seeders** - Dados de teste
+- **Job** - Job para export csv
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Frontend (Vue.js)
 
-## Learning Laravel
+- **Vue.js 3** - Framework JavaScript reativo
+- **Vue Router** - Roteamento SPA
+- **Axios** - Cliente HTTP
+- **Bootstrap 5** - Framework CSS
+- **FontAwesome** - Ícones
+- **Vue Select** - Componente de seleção
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## ✨ Funcionalidades
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 🔐 Sistema de Autenticação
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Login/Logout com Sanctum
+- Proteção de rotas por autenticação
+- Interceptadores automáticos para requisições
+- Redirecionamento em caso de token expirado
 
-## Laravel Sponsors
+### 👥 Gerenciamento de Usuários (Admin)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- ✅ Criar novos usuários
+- ✅ Editar dados de usuários
+- ✅ Excluir usuários
+- ✅ Atribuir roles (Admin/User)
+- ✅ Validação completa de formulários
 
-### Premium Partners
+### 📋 Gerenciamento de Tarefas
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- ✅ **Admin**: Visualiza todas as tarefas
+- ✅ **User**: Visualiza apenas suas tarefas
+- ✅ Criar/editar tarefas (apenas Admin)
+- ✅ Atribuir responsáveis às tarefas
+- ✅ Definir data de expiração
+- ✅ Exportar as tarefas via CSV
+- ✅ Alterar status das tarefas:
+  - 🟡 Pendente
+  - 🔵 Em Progresso
+  - 🟢 Concluída
+  - 🔴 Cancelada
 
-## Contributing
+### 🔍 Recursos Adicionais
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **Busca avançada** por título e descrição
+- **Filtros por status** das tarefas
+- **Sistema de notificações** toast
+- **E-mails automáticos** para mudanças de status
+- **Interface responsiva** com Bootstrap
 
-## Code of Conduct
+## 📁 Estrutura do Projeto
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```
+├── app/
+│   ├── Enums/
+│   │   └── TaskStatus.php                    # Enum para status das tarefas (pending, in_progress, completed, cancelled)
+│   │
+│   ├── Helpers/
+│   │   └── EnumHelper.php                    # Helper para conversão de enums
+│   │
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Api/
+│   │   │   │   ├── AuthController.php        # Autenticação API (login, logout, me)
+│   │   │   │   ├── TaskController.php        # CRUD de tarefas + updateStatus + getByUser
+│   │   │   │   ├── UserController.php        # CRUD de usuários
+│   │   │   │   └── RoleController.php        # Listagem de roles
+│   │   │   │
+│   │   │   ├── Auth/                         # Controllers de autenticação web
+│   │   │   │   ├── LoginController.php
+│   │   │   │   ├── RegisterController.php
+│   │   │   │   ├── ForgotPasswordController.php
+│   │   │   │   ├── ResetPasswordController.php
+│   │   │   │   ├── ConfirmPasswordController.php
+│   │   │   │   └── VerificationController.php
+│   │   │   │
+│   │   │   ├── Controller.php                # Controller base
+│   │   │   └── RoleController.php            # (arquivo vazio)
+│   │   │
+│   │   ├── Middleware/
+│   │   │   └── UserUnauthorized.php          # Middleware para verificar se usuário é admin
+│   │   │
+│   │   └── Requests/
+│   │       ├── Task/
+│   │       │   ├── StoreRequest.php          # Validação para criação de tarefas
+│   │       │   └── UpdateRequest.php         # Validação para atualização de tarefas
+│   │       │
+│   │       └── User/
+│   │           ├── StoreRequest.php          # Validação para criação de usuários
+│   │           └── UpdateRequest.php         # Validação para atualização de usuários
+│   │
+│   ├── Jobs/
+│   │   └── ExportTasksToCsv.php               # Job para exportar CSV
+│   │
+│   ├── Mail/
+│   │   ├── TaskAssignMail.php                # E-mail de atribuição de tarefa
+│   │   ├── TaskCancelledMail.php             # E-mail de tarefa cancelada
+│   │   └── TaskCompletedMail.php             # E-mail de tarefa concluída
+│   │
+│   ├── Models/
+│   │   ├── User.php                          # Modelo de usuário (com Sanctum)
+│   │   ├── Role.php                          # Modelo de role/função
+│   │   └── Task.php                          # Modelo de tarefa (com enum TaskStatus)
+│   │
+│   ├── Observers/
+│   │   └── TaskObserver.php                  # Observer para eventos de Task (envio de e-mails)
+│   │
+│   ├── Policies/
+│   │   ├── TaskPolicy.php                    # (arquivo vazio) - Policy para tarefas
+│   │   └── UserPolicy.php                    # (arquivo vazio) - Policy para usuários
+│   │
+│   └── Providers/
+│       └── AppServiceProvider.php            # Provider principal (registra observer e helper)
+│
+├── resources/
+│   ├── views/
+│   │   └── email/                            # Templates de e-mail
+│   │       ├── assignTask.blade.php          # Template para tarefa atribuída
+│   │       ├── cancelledTask.blade.php       # Template para tarefa cancelada
+│   │       └── completedTask.blade.php       # Template para tarefa concluída
+│   │
+│   └── js/                                   # Frontend (assumido baseado na estrutura)
+│       ├── Auth/                             # Sistema de autenticação
+│       ├── pages/                            # Páginas Vue/React
+│       └── components/                       # Componentes reutilizáveis
+│
+└── database/
+    ├── migrations/                           # Migrações do banco
+    │   ├── create_roles_table.php
+    │   ├── create_users_table.php
+    │   └── create_tasks_table.php
+    │
+    ├── seeders/                              # Dados de teste
+    │   ├── RoleSeeder.php
+    │   ├── UserSeeder.php
+    │   └── TaskSeeder.php
+    │
+    └── factories/                            # Fábricas de modelos
+        ├── UserFactory.php
+        ├── RoleFactory.php
+        └── TaskFactory.php
+```
 
-## Security Vulnerabilities
+## 🛠️ Instalação e Configuração
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Pré-requisitos
 
-## License
+- **Docker** e **Docker Compose**
+- **Git**
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+> 💡 Este projeto usa **Laravel Sail** para containerização.
+
+### Instalação Rápida
+
+1. **Clonar o repositório**
+
+```bash
+git clone <repository-url>
+cd todo-app
+```
+
+2. **Instalar dependências do Laravel**
+
+```bash
+composer install
+```
+
+3. **Instalar dependências do frontend**
+
+```bash
+npm install
+```
+
+4. **Iniciar o projeto**
+
+```bash
+./vendor/bin/sail up -d
+```
+
+5. **Compilar assets (em terminal separado)**
+
+```bash
+./vendor/bin/sail npm run dev
+```
+
+> 📋 **Nota**: O arquivo `.env` já está configurado e será fornecido junto com o projeto - não é necessário configuração adicional.
+
+A aplicação estará disponível em `http://localhost`
+
+### Alias para facilitar uso (Opcional)
+
+```bash
+alias sail='./vendor/bin/sail'
+```
+
+## 👤 Usuários de Teste
+
+O projeto já vem com usuários pré-configurados:
+
+**Administrador:**
+
+- Email: `admin@example.com`
+- Senha: `password`
+
+**Usuário comum:**
+
+- Email: `user@example.com`
+- Senha: `password`
+
+## 🔗 Rotas da API
+
+### Autenticação
+
+```
+POST   /api/login          # Login
+POST   /api/logout         # Logout
+GET    /api/me             # Dados do usuário logado
+```
+
+### Tarefas
+
+```
+GET    /api/tasks          # Listar todas (Admin)
+GET    /api/tasks/user     # Tarefas do usuário logado
+POST   /api/tasks          # Criar tarefa (Admin)
+GET    /api/tasks/{id}     # Detalhes da tarefa
+PUT    /api/tasks/{id}     # Atualizar tarefa (Admin)
+DELETE /api/tasks/{id}     # Excluir tarefa
+PATCH  /api/tasks/{id}/status # Atualizar status
+```
+
+### Usuários (Admin)
+
+```
+GET    /api/users          # Listar usuários
+POST   /api/users          # Criar usuário
+GET    /api/users/{id}     # Detalhes do usuário
+PUT    /api/users/{id}     # Atualizar usuário
+DELETE /api/users/{id}     # Excluir usuário
+```
+
+### Roles
+
+```
+GET    /api/roles          # Listar roles disponíveis
+```
+
+## 🎯 Funcionalidades por Tipo de Usuário
+
+### 👑 Administrador
+
+- ✅ Gerenciar todos os usuários
+- ✅ Criar, editar e excluir tarefas
+- ✅ Visualizar todas as tarefas do sistema
+- ✅ Atribuir tarefas a usuários
+- ✅ Alterar status de qualquer tarefa
+
+### 👤 Usuário Comum
+
+- ✅ Visualizar apenas suas tarefas
+- ✅ Alterar status das próprias tarefas
+- ✅ Filtrar e buscar suas tarefas
+- ❌ Não pode criar/editar tarefas
+- ❌ Não pode gerenciar usuários
+
+## 📧 Sistema de E-mails
+
+O sistema envia e-mails automáticos quando:
+
+- ✉️ Tarefa é atribuída ao usuário
+- ✉️ Status da tarefa muda para "Concluída"
+- ✉️ Status da tarefa muda para "Cancelada"
+
+## 🔧 Personalização
+
+### Adicionar novos status
+
+1. Editar `app/Enums/TaskStatus.php`
+2. Atualizar validações nos Form Requests
+3. Adicionar no frontend em `TaskList.vue`
+
+### Customizar e-mails
+
+Os templates estão em `resources/views/email/`:
+
+- `assignTask.blade.php`
+- `completedTask.blade.php`
+- `cancelledTask.blade.php`
+
+## 🚀 Deploy
+
+### Desenvolvimento
+
+```bash
+# Iniciar ambiente completo
+./vendor/bin/sail up -d
+
+# Compilar assets em modo watch
+./vendor/bin/sail npm run dev
+```
+
+## 📝 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+
+## 👨‍💻 Desenvolvedor
+
+Desenvolvido com ❤️ por JoãoMartins
+
+---

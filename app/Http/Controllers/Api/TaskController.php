@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Task\StoreRequest;
 use App\Http\Requests\Task\UpdateRequest;
+use App\Jobs\ExportTasksToCsv;
 use App\Models\Task;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,11 +16,16 @@ class TaskController extends Controller
     public function index(): JsonResponse
     {
         $tasks = Task::with('user')->paginate(15);
+
         return response()->json($tasks);
     }
 
     public function show(Task $task): JsonResponse
     {
+        if (! $task) {
+            return response()->json(['message' => 'Task not found'], 404);
+        }
+
         $task->load('user');
 
         return response()->json($task);
@@ -37,27 +43,25 @@ class TaskController extends Controller
 
     public function update(UpdateRequest $request, Task $task): JsonResponse
     {
-
         $data = $request->validated();
 
-        if (!$task) {
+        if (! $task) {
             return response()->json(['message' => 'Task not found'], 404);
         }
-        $data['expiration_date'] = date('Y-m-d H:i:s', strtotime($data['expiration_date']));
 
-        Task::where('id', $task->id)->update([
-            ...$data,
-            'slug' => Str::slug($data['title']),
-        ]);
+        $data['slug'] = Str::slug($data['title']);
 
-        $task->refresh()->load('user');
+        $task->fill($data);
+        $task->save();
+
+        $task->load('user');
 
         return response()->json($task);
     }
 
     public function destroy(Task $task): JsonResponse
     {
-        if (!$task) {
+        if (! $task) {
             return response()->json(['message' => 'Task not found'], 404);
         }
 
@@ -69,7 +73,7 @@ class TaskController extends Controller
     public function updateStatus(Request $request, Task $task): JsonResponse
     {
         $request->validate(['status' => 'sometimes|string|in:pending,in_progress,completed,cancelled']);
-        if (!$task) {
+        if (! $task) {
             return response()->json(['message' => 'Task not found'], 404);
         }
         $task->update(['status' => $request->status]);
@@ -81,10 +85,23 @@ class TaskController extends Controller
     {
         $tasks = Task::where('user_id', auth()->user()->id)->with('user')->get();
 
-        if (!$tasks) {
+        if (! $tasks) {
             return response()->json(['message' => 'No tasks found for this user'], 404);
         }
 
         return response()->json($tasks);
+    }
+
+    public function exportTasks()
+    {
+        $userId = auth()->id();
+
+        (new ExportTasksToCsv($userId))->handle();
+        $file = storage_path("app/exports/tasks_{$userId}.csv");
+        if (! file_exists($file)) {
+            return response()->json(['message' => 'Arquivo não encontrado'], 404);
+        }
+
+        return response()->download($file, 'tasks.csv')->deleteFileAfterSend(true);
     }
 }

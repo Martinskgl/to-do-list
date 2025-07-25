@@ -11,6 +11,7 @@ class RoleController extends Controller
     public function index(): JsonResponse
     {
         $roles = Role::with('users')->paginate(15);
+
         return response()->json($roles);
     }
 }

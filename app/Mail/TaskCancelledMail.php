@@ -14,7 +14,9 @@ class TaskCancelledMail extends Mailable
     use SerializesModels;
 
     public $task;
+
     public $user;
+
     /**
      * Create a new message instance.
      */

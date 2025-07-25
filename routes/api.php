@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\{RoleController, TaskController, UserController};
+use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\Api\TaskController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Middleware\UserUnauthorized;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/tasks/export', [TaskController::class, 'exportTasks'])->name('tasks.export');
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
 
@@ -33,5 +36,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
     Route::get('tasks/{task}/status', [TaskController::class, 'getStatus']);
     Route::patch('tasks/{task}/status', [TaskController::class, 'updateStatus']);
-
 });

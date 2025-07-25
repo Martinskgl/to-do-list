@@ -19,7 +19,7 @@ class UserController extends Controller
 
     public function show(User $user): JsonResponse
     {
-        if (!$user) {
+        if (! $user) {
             return response()->json(['message' => 'User not found'], 404);
         }
 
@@ -44,7 +44,7 @@ class UserController extends Controller
     {
         $data = $request->validated();
 
-        if (!$user) {
+        if (! $user) {
             return response()->json(['message' => 'User not found'], 404);
         }
 
@@ -56,7 +56,7 @@ class UserController extends Controller
     public function destroy(User $user): JsonResponse
     {
 
-        if (!$user) {
+        if (! $user) {
             return response()->json(['message' => 'User not found'], 404);
         }
 

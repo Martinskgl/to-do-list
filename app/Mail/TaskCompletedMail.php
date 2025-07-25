@@ -12,7 +12,9 @@ class TaskCompletedMail extends Mailable
 {
     use Queueable;
     use SerializesModels;
+
     public $task;
+
     public $user;
 
     /**

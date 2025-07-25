@@ -12,20 +12,20 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $adminRole = Role::where('slug', 'admin')->first();
-        $userRole = Role::where('slug', 'user')->first();
+        $userRole  = Role::where('slug', 'user')->first();
 
         User::create([
-            'name' => 'Admin',
-            'email' => 'admin@example.com',
+            'name'     => 'Admin',
+            'email'    => 'admin@example.com',
             'password' => Hash::make('password'),
-            'role_id' => $adminRole->id,
+            'role_id'  => $adminRole->id,
         ]);
 
         User::create([
-            'name' => 'User',
-            'email' => 'user@example.com',
+            'name'     => 'User',
+            'email'    => 'user@example.com',
             'password' => Hash::make('password'),
-            'role_id' => $userRole->id,
+            'role_id'  => $userRole->id,
         ]);
     }
 }

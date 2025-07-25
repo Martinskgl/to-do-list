@@ -86,9 +86,9 @@ class TaskControllerTest extends TestCase
         $this->actingAs($user);
 
         $data = [
-            'title' => 'New Task',
-            'describe' => 'Task description',
-            'user_id' => $user->id,
+            'title'           => 'New Task',
+            'describe'        => 'Task description',
+            'user_id'         => $user->id,
             'expiration_date' => now()->addDays(7)->toDateTimeString(),
         ];
 
@@ -100,9 +100,9 @@ class TaskControllerTest extends TestCase
     public function test_store_unauthenticated()
     {
         $data = [
-            'title' => 'New Task',
-            'describe' => 'Task description',
-            'user_id' => 1,
+            'title'           => 'New Task',
+            'describe'        => 'Task description',
+            'user_id'         => 1,
             'expiration_date' => now()->addDays(7)->toDateTimeString(),
         ];
 
@@ -117,9 +117,9 @@ class TaskControllerTest extends TestCase
         $this->actingAs($user);
 
         $data = [
-            'title' => 'New Task',
-            'describe' => 'Task description',
-            'user_id' => $user->id,
+            'title'           => 'New Task',
+            'describe'        => 'Task description',
+            'user_id'         => $user->id,
             'expiration_date' => now()->addDays(7)->toDateTimeString(),
         ];
 
@@ -136,8 +136,8 @@ class TaskControllerTest extends TestCase
         $task = Task::factory()->create(['user_id' => $user->id]);
 
         $data = [
-            'title' => 'Updated Task',
-            'describe' => 'Updated description',
+            'title'           => 'Updated Task',
+            'describe'        => 'Updated description',
             'expiration_date' => now()->addDays(10)->toDateTimeString(),
         ];
 
@@ -153,8 +153,8 @@ class TaskControllerTest extends TestCase
         $this->actingAs($user);
 
         $data = [
-            'title' => 'Updated Task',
-            'describe' => 'Updated description',
+            'title'           => 'Updated Task',
+            'describe'        => 'Updated description',
             'expiration_date' => now()->addDays(10)->toDateTimeString(),
         ];
 
@@ -168,8 +168,8 @@ class TaskControllerTest extends TestCase
         $task = Task::factory()->create();
 
         $data = [
-            'title' => 'Updated Task',
-            'describe' => 'Updated description',
+            'title'           => 'Updated Task',
+            'describe'        => 'Updated description',
             'expiration_date' => now()->addDays(10)->toDateTimeString(),
         ];
 
@@ -186,8 +186,8 @@ class TaskControllerTest extends TestCase
         $task = Task::factory()->create(['user_id' => $user->id]);
 
         $data = [
-            'title' => 'Updated Task',
-            'describe' => 'Updated description',
+            'title'           => 'Updated Task',
+            'describe'        => 'Updated description',
             'expiration_date' => now()->addDays(10)->toDateTimeString(),
         ];
 

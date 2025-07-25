@@ -28,8 +28,8 @@ class TaskObserverTest extends TestCase
     public function test_completed_mail_sent_on_status_change()
     {
         Mail::fake();
-        $user = User::factory()->create();
-        $task = Task::factory()->create(['user_id' => $user->id, 'status' => 'pending']);
+        $user         = User::factory()->create();
+        $task         = Task::factory()->create(['user_id' => $user->id, 'status' => 'pending']);
         $task->status = 'completed';
         $task->save();
         Mail::assertSent(TaskCompletedMail::class, function ($mail) use ($task, $user) {
@@ -40,8 +40,8 @@ class TaskObserverTest extends TestCase
     public function test_cancelled_mail_sent_on_status_change()
     {
         Mail::fake();
-        $user = User::factory()->create();
-        $task = Task::factory()->create(['user_id' => $user->id, 'status' => 'pending']);
+        $user         = User::factory()->create();
+        $task         = Task::factory()->create(['user_id' => $user->id, 'status' => 'pending']);
         $task->status = 'cancelled';
         $task->save();
         Mail::assertSent(TaskCancelledMail::class, function ($mail) use ($task, $user) {

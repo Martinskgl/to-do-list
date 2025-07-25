@@ -64,6 +64,14 @@ Uma aplicação completa de gerenciamento de tarefas (To-Do List) desenvolvida c
 - **E-mails automáticos** para mudanças de status
 - **Interface responsiva** com Bootstrap
 
+## Comandos Úteris
+
+- **Sail pint** formatador de código PHP padrão do Laravel
+- **Sail npm run lint** - procura erros, más práticas e inconsistências de estilo no seu código
+- **Sail npm run format** - Código para formatação do código (;, espaços...)
+- **/vendor/bin/php-cs-fixer fix** - formatar automaticamente seu código PHP com base em um conjunto de regras predefinidas.
+- **sail artisan format** - Executa os prettier do Laravel/PHP por command.
+
 ## 📁 Estrutura do Projeto
 
 ```

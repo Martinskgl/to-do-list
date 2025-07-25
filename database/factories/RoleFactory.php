@@ -11,7 +11,7 @@ class RoleFactory extends Factory
         $slug = $this->faker->randomElement(['user', 'admin']);
 
         return [
-            'slug' => $slug,
+            'slug'  => $slug,
             'label' => $slug,
         ];
     }

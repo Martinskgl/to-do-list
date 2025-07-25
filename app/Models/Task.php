@@ -23,7 +23,7 @@ class Task extends Model
     protected function casts(): array
     {
         return [
-            'status' => TaskStatus::class,
+            'status'          => TaskStatus::class,
             'expiration_date' => 'datetime',
         ];
     }

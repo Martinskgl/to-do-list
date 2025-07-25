@@ -51,7 +51,7 @@ class UserControllerTest extends TestCase
 
     public function test_show_unauthenticated()
     {
-        $user = User::factory()->create();
+        $user     = User::factory()->create();
         $response = $this->getJson("/api/users/{$user->id}");
         $response->assertStatus(401);
     }
@@ -84,10 +84,10 @@ class UserControllerTest extends TestCase
         $this->actingAs($user, 'sanctum');
 
         $data = [
-            'name' => 'testete',
-            'email' => 'testee@gmail.com',
+            'name'     => 'testete',
+            'email'    => 'testee@gmail.com',
             'password' => 'inicio@1',
-            'role_id' => $role->id,
+            'role_id'  => $role->id,
         ];
 
         $response = $this->postJson('/api/users', $data);
@@ -111,10 +111,10 @@ class UserControllerTest extends TestCase
         $this->actingAs($user);
 
         $data = [
-            'name' => 'testete',
-            'email' => 'testee@gmail.com',
+            'name'     => 'testete',
+            'email'    => 'testee@gmail.com',
             'password' => 'inicio@1',
-            'role_id' => $role->id,
+            'role_id'  => $role->id,
         ];
 
         $response = $this->postJson('/api/users', $data);
@@ -128,10 +128,10 @@ class UserControllerTest extends TestCase
         $this->actingAs($user, 'sanctum');
 
         $data = [
-            'name' => 'updated name',
-            'email' => 'updated_email@example.com',
+            'name'     => 'updated name',
+            'email'    => 'updated_email@example.com',
             'password' => 'updated_password',
-            'role_id' => $role->id,
+            'role_id'  => $role->id,
         ];
 
         $response = $this->putJson("/api/users/{$user->id}", $data);
@@ -145,7 +145,7 @@ class UserControllerTest extends TestCase
 
     public function test_update_unauthenticated()
     {
-        $user = User::factory()->create();
+        $user     = User::factory()->create();
         $response = $this->putJson("/api/users/{$user->id}", []);
         $response->assertStatus(401);
     }
@@ -157,10 +157,10 @@ class UserControllerTest extends TestCase
         $this->actingAs($user, 'sanctum');
 
         $data = [
-            'name' => 'updated name',
-            'email' => 'updated_email@example.com',
+            'name'     => 'updated name',
+            'email'    => 'updated_email@example.com',
             'password' => 'updated_password',
-            'role_id' => $role->id,
+            'role_id'  => $role->id,
         ];
 
         $response = $this->putJson('/api/users/999', $data);
@@ -175,10 +175,10 @@ class UserControllerTest extends TestCase
         $this->actingAs($user);
 
         $data = [
-            'name' => 'updated name',
-            'email' => 'updated_email@example.com',
+            'name'     => 'updated name',
+            'email'    => 'updated_email@example.com',
             'password' => 'updated_password',
-            'role_id' => $role->id,
+            'role_id'  => $role->id,
         ];
 
         $response = $this->putJson("/api/users/{$user->id}", $data);
@@ -198,7 +198,7 @@ class UserControllerTest extends TestCase
 
     public function test_destroy_unauthenticated()
     {
-        $user = User::factory()->create();
+        $user     = User::factory()->create();
         $response = $this->deleteJson("/api/users/{$user->id}");
         $response->assertStatus(401);
     }

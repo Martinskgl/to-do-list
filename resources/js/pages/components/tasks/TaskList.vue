@@ -6,7 +6,7 @@
         <button v-if="isAdmin" @click="goToCreateTask" class="btn btn-success btn-sm">
           + Criar Task
         </button>
-        <button  @click="downloadTasksCsv" class="btn btn-outline-secondary btn-sm">
+        <button @click="downloadTasksCsv" class="btn btn-outline-secondary btn-sm">
           <i class="fas fa-download"></i> Download CSV
         </button>
       </div>

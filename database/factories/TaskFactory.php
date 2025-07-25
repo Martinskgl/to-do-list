@@ -12,11 +12,11 @@ class TaskFactory extends Factory
         $title = $this->faker->sentence(3);
 
         return [
-            'title' => $title,
-            'describe' => $this->faker->paragraph(),
-            'slug' => str($title)->slug(),
-            'status' => $this->faker->randomElement(['pending', 'in_progress', 'completed', 'cancelled']),
-            'user_id' => User::factory(),
+            'title'           => $title,
+            'describe'        => $this->faker->paragraph(),
+            'slug'            => str($title)->slug(),
+            'status'          => $this->faker->randomElement(['pending', 'in_progress', 'completed', 'cancelled']),
+            'user_id'         => User::factory(),
             'expiration_date' => $this->faker->optional()->dateTimeBetween('now', '+1 month'),
         ];
     }
